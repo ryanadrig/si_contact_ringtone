@@ -1,6 +1,6 @@
 # si_contact_ringtone
 
-A new Flutter plugin project.
+flutter create -t plugin --platforms=android --org=com.siginfinite si_contact_ringtone
 
 ## Getting Started
 
