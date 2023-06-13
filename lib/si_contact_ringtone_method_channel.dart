@@ -14,4 +14,5 @@ class MethodChannelSiContactRingtone extends SiContactRingtonePlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
 }
