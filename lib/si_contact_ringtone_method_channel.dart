@@ -15,4 +15,18 @@ class MethodChannelSiContactRingtone extends SiContactRingtonePlatform {
     return version;
   }
 
+
+  @override
+  Future<String?> setContactNameByNumber(
+      String contactName,
+      String newNumber
+      ) async {
+    String success = "setContactNameByNumber failed";
+     success = await methodChannel.invokeMethod('setContactNameByNumber', {
+      'contactName': contactName,
+      'newNumber': newNumber,
+    });
+    return success;
+  }
+
 }

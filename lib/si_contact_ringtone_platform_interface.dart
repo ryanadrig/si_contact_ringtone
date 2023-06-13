@@ -2,7 +2,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'si_contact_ringtone_method_channel.dart';
 
-abstract class SiContactRingtonePlatform extends PlatformInterface {
+ class SiContactRingtonePlatform extends PlatformInterface {
   /// Constructs a SiContactRingtonePlatform.
   SiContactRingtonePlatform() : super(token: _token);
 
@@ -25,6 +25,11 @@ abstract class SiContactRingtonePlatform extends PlatformInterface {
 
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  Future<String?> setContactNameByNumber( String contactName,
+      String newNumber) {
+    throw UnimplementedError('setContactNameByNumber() has not been implemented.');
   }
 
 
