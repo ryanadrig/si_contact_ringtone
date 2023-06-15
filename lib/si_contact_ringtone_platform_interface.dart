@@ -27,6 +27,10 @@ abstract class SiContactRingtonePlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
+  Future<String?> getContacts() {
+    throw UnimplementedError('getContacts() has not been implemented.');
+  }
+
   Future<String?> setContactNameByNumber(String newName, String contactNumber){
     throw UnimplementedError('setContactNameByNumber() has not been implemented.');
   }

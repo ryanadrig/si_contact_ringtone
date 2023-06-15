@@ -6,6 +6,10 @@ class SiContactRingtone {
     return SiContactRingtonePlatform.instance.getPlatformVersion();
   }
 
+  Future<String?> getContacts() {
+    return SiContactRingtonePlatform.instance.getContacts();
+  }
+
   Future<String?> setContactNameByNumber(String newName, String contactNumber) {
    return SiContactRingtonePlatform.instance.setContactNameByNumber(newName, contactNumber);
   }
