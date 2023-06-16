@@ -33,7 +33,8 @@ import com.google.gson.Gson
 //import org.json.JSONObject
 //import org.json.JSONStringer
 
-
+import com.siginfinite.si_contact_ringtone.SICRPermissions
+import com.siginfinite.si_contact_ringtone.SICRGetContacts
 /** SiContactRingtonePlugin */
 class SiContactRingtonePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The MethodChannel that will the communication between Flutter and native Android
@@ -70,177 +71,25 @@ class SiContactRingtonePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     }
 
-    if (call.method == "requestContactsMusicAndStoragePermissions"){
-
-      val REQUEST_ID_MULTIPLE_PERMISSIONS = 1
-
-        val readExternal =
-          ContextCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE)
-        val writeExternal =
-          ContextCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val readContacts =
-          ContextCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.READ_CONTACTS)
-        val writeContacts =
-          ContextCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.WRITE_CONTACTS)
-
-        val readMedia =
-          ContextCompat.checkSelfPermission(activity!!.applicationContext, Manifest.permission.READ_MEDIA_AUDIO)
-
-        val listPermissionsNeeded: MutableList<String> = ArrayList()
-        if (readExternal != PackageManager.PERMISSION_GRANTED) {
-          listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-        if (writeExternal != PackageManager.PERMISSION_GRANTED) {
-          listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-        if (readContacts != PackageManager.PERMISSION_GRANTED) {
-          listPermissionsNeeded.add(Manifest.permission.READ_CONTACTS)
-        }
-        if (writeContacts != PackageManager.PERMISSION_GRANTED) {
-          listPermissionsNeeded.add(Manifest.permission.WRITE_CONTACTS)
-        }
-
-        // Api level 31 and above which is pretty new
-        if (readMedia != PackageManager.PERMISSION_GRANTED) {
-          listPermissionsNeeded.add(Manifest.permission.READ_MEDIA_AUDIO)
-        }
-
-        if (!listPermissionsNeeded.isEmpty()) {
-          ActivityCompat.requestPermissions(
-            activity!!,
-            listPermissionsNeeded.toTypedArray(),
-            REQUEST_ID_MULTIPLE_PERMISSIONS
-          )
-          result.success(false)
-        }
-        result.success(true)
-
+    else if (call.method == "requestContactsMusicAndStoragePermissions"){
+      val perms_granted : Boolean = SICRPermissions().requestPerms(activity!!)
+      result.success(perms_granted)
     }
 
-    if (call.method == "getContacts") {
-
-        var bres: MutableMap<String, MutableMap<String, String>> = mutableMapOf()
-
-        val resolver: ContentResolver = activity!!.contentResolver
-
-        val lookupUri = ContactsContract.Contacts.CONTENT_URI
-        // Query Contact Data
-        val ct_data_test: Cursor? = resolver.query(
-          lookupUri!!, null, null, null, null)
-
-        ct_data_test!!.moveToFirst()
-        val ct_data_len = ct_data_test!!.count
-        var ct_idx= 0
-        while (ct_idx < ct_data_len) {
-          var col_idx = 0;
-          for (col in ct_data_test.columnNames) {
-            var brci : MutableMap<String, String> = mutableMapOf()
-            val columnKey: String = ct_data_test.getColumnName(col_idx)
-
-
-            if (columnKey == "display_name") {
-              var columnVal = ct_data_test.getString(col_idx)
-              if (columnVal == null){
-                columnVal = "null"
-              }
-              brci.put(columnKey, columnVal)
-            }
-            if (columnKey == "custom_ringtone") {
-              var columnVal = ct_data_test.getString(col_idx)
-              if (columnVal == null){
-                columnVal = "null"
-              }
-              brci.put(columnKey, columnVal)
-            }
-            if (columnKey == "_id"){
-
-              val columnVal = ct_data_test.getInt(col_idx)
-              val phoneCursor: Cursor? = resolver.query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null,
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + columnVal,
-                null,
-                null
-              )
-
-              while (phoneCursor!!.moveToNext()) {
-                val phone = phoneCursor.getString(
-                  phoneCursor
-                    .getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)
-                )
-                if (phone == null){
-
-                }else {
-
-                  brci.put("phoneNumber", phone.toString())
-                }
-              }
-
-
-            }
-            if (columnKey == "display_name_reverse"){
-              var columnVal = ct_data_test.getString(col_idx)
-              if (columnVal == null){
-                columnVal = "null"
-              }
-              brci.put(columnKey, columnVal.toString())
-            }
-            if (columnKey == "photo_thumb_uri"){
-              var columnVal = ct_data_test.getString(col_idx)
-              if (columnVal == null){
-                columnVal = "null"
-              }
-              brci.put(columnKey, columnVal.toString())
-            }
-            if (columnKey == "photo_uri"){
-              var columnVal = ct_data_test.getString(col_idx)
-              if (columnVal == null){
-                columnVal = "null"
-              }
-              brci.put(columnKey, columnVal.toString())
-            }
-            if (columnKey == "photo_file_id"){
-              var columnVal = ct_data_test.getInt(col_idx)
-              if (columnVal == null){
-                columnVal = 0
-              }
-              brci.put(columnKey, columnVal.toString())
-            }
-            if (columnKey == "photo_id"){
-              var columnVal  = ct_data_test.getInt(col_idx)
-              if (columnVal == null){
-                columnVal = 0
-              }
-              brci.put(columnKey, columnVal.toString())
-            }
-            if (brci.isEmpty() == false) {
-              if (bres[ct_idx.toString()] == null){
-                bres[ct_idx.toString()] = mutableMapOf()
-              }
-              bres[ct_idx.toString()]!!.putAll(brci)
-            }
-            col_idx += 1
-          }
-          ct_idx += 1
-          ct_data_test.moveToNext()
-
-        }
-        ct_data_test!!.close()
-
-//        val jsonres: JSONObject = JSONObject(bres.toString())
-
-      val gson = Gson()
-      val jsonres = gson.toJson(bres)
-//      println("json convert complete")
-//      println("to gson ~ " + json.toString())
-      val jsonresstr = jsonres.toString()
-        return result.success(jsonresstr)
+    else if (call.method == "getContacts") {
+      val jsonresstr : String = SICRGetContacts().getContacts(activity!!)
+      result.success(jsonresstr)
       }
 
 
-    if (call.method == "setContactNameByNumber") {
+    else if (call.method == "setContactNameByNumber") {
       result.success("setContactNameByNumber complete name ~ " + call.argument("newName")
       + "number ~ " + call.argument("contactNumber"))
+    }
+
+    else if (call.method == "setContactRingtoneByNumber") {
+      result.success("setContactRingtoneByNumber ringtone data path ~ " + call.argument("path")
+              + "number ~ " + call.argument("contactNumber"))
     }
 
     else {
