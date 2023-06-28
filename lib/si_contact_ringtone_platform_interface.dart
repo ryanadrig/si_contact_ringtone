@@ -39,7 +39,11 @@ abstract class SiContactRingtonePlatform extends PlatformInterface {
     throw UnimplementedError('setContactNameByNumber() has not been implemented.');
   }
 
-  Future<bool?> setContactRingtoneByNumber(String contactNumber, String newName){
+  Future<bool?> setContactRingtoneByNumber(String contactNumber, String path){
     throw UnimplementedError('setContactNameByNumber() has not been implemented.');
+  }
+
+  Future<String?> getAllMusicAndRingtones() {
+    throw UnimplementedError('getAllMusicAndRingtones() has not been implemented.');
   }
 }

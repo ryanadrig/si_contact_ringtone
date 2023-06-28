@@ -11,7 +11,7 @@ import java.io.File
 
 class SICRSetRingtone {
 
-    fun setRingtoneByNumber(call_activity: Activity, number: String, path: String) : Bool{
+    fun setRingtoneByNumber(call_activity: Activity, number: String, path: String): Boolean{
 
         val resolver: ContentResolver = call_activity.applicationContext.contentResolver
 

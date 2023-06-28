@@ -48,6 +48,8 @@ class SICRGetContacts {
                 if (columnKey == "_id") {
 
                     val columnVal = ct_data_test.getInt(col_idx)
+                    println("[SICRGetContacts] contact id ~ " + columnVal.toString())
+                    brci.put(columnKey, columnVal.toString())
                     val phoneCursor: Cursor? = resolver.query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         null,

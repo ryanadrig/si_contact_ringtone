@@ -22,4 +22,9 @@ class SiContactRingtone {
   Future<bool?> setContactRingtoneByNumber( String contactNumber, String path,) {
     return SiContactRingtonePlatform.instance.setContactRingtoneByNumber(contactNumber,path );
   }
+
+  Future<String?> getAllMusicAndRingtones() {
+    return SiContactRingtonePlatform.instance.getAllMusicAndRingtones();
+  }
+
 }

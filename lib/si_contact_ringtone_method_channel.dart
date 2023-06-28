@@ -29,12 +29,28 @@ class MethodChannelSiContactRingtone extends SiContactRingtonePlatform {
   }
 
   @override
-  Future<String?> setContactNameByNumber(String contactNumber, String newName ) async {
-    final res = await methodChannel.invokeMethod<String>('setContactNameByNumber',
+  Future<bool?> setContactNameByNumber(String contactNumber, String newName ) async {
+    final res = await methodChannel.invokeMethod<bool>('setContactNameByNumber',
     {"contactNumber":contactNumber,
       "newName": newName
     }
     );
+    return res;
+  }
+
+  @override
+  Future<bool?> setContactRingtoneByNumber(String contactNumber, String path ) async {
+    final res = await methodChannel.invokeMethod<bool>('setRingtonByNumber',
+        {"contactNumber":contactNumber,
+          "path": path
+        }
+    );
+    return res;
+  }
+
+  @override
+  Future<String?> getAllMusicAndRingtones() async {
+    final res = await methodChannel.invokeMethod<String>('getAllMusicAndRingtones');
     return res;
   }
 

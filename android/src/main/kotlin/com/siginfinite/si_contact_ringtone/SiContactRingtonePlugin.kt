@@ -92,6 +92,11 @@ class SiContactRingtonePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               + "number ~ " + call.argument("contactNumber"))
     }
 
+    else if (call.method == "getAllMusicAndRingtones") {
+      val jsonresstr : String = SICRAudioList().getAllMusicAndRTRemDups(activity!!)
+      result.success(jsonresstr)
+    }
+
     else {
       result.notImplemented()
     }

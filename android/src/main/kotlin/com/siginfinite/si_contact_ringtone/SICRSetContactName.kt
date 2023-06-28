@@ -11,7 +11,7 @@ import android.provider.ContactsContract
 import java.util.*
 
 class SICRSetContactName {
-    fun setContactNameByNumber(call_activity: Activity, number: String, newName: String): Bool{
+    fun setContactNameByNumber(call_activity: Activity, number: String, newName: String):Boolean {
         println("setContactNameByNumber")
         val values = ContentValues()
         val resolver: ContentResolver = call_activity.applicationContext.contentResolver
@@ -82,7 +82,7 @@ class SICRSetContactName {
                 for (result in results) {
                     println("Update Result" + result.toString());
                     if (result.count!! > 0){
-                        printlnt("result updated")
+                        println("result updated")
                         return true
                     }
                 }
